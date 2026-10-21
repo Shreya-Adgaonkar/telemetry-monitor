@@ -1,0 +1,19 @@
+<div class="card">
+  <h2>{{ config().label }}</h2>
+
+  <svg viewBox="0 0 120 120" class="gauge">
+    <circle class="track" cx="60" cy="60" r="50" />
+    <circle class="arc" cx="60" cy="60" r="50" transform="rotate(-90 60 60)"
+            [style.stroke]="'var(--' + (status() ?? 'normal') + ')'"
+            [style.stroke-dasharray]="circumference"
+            [style.stroke-dashoffset]="circumference * (1 - percent())" />
+    <text x="60" y="58" class="value">{{ displayValue() }}</text>
+    <text x="60" y="76" class="unit">{{ config().baseUnit }}</text>
+  </svg>
+
+  @if (status(); as s) {
+    <span class="badge" [style.background]="'var(--' + s + ')'">{{ s }}</span>
+  }
+
+  <p class="updated">Last updated: {{ lastUpdated() }}</p>
+</div>

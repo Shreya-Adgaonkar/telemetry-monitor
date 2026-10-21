@@ -9,3 +9,5 @@
 @if (telemetry.data(); as d) {
   <p>Velocity: {{ d.velocity.value }} {{ d.velocity.unit }}</p>
 }
+
+<app-gauge-card parameter="velocity" />

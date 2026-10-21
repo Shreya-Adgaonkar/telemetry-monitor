@@ -1,0 +1,35 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+h2 { margin: 0; font-size: 1.1rem; }
+.gauge { width: 100%; max-width: 220px; }
+
+circle { fill: none; stroke-width: 10; }
+.track { stroke: var(--border); }
+.arc {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+}
+
+text { text-anchor: middle; }
+.value { fill: var(--text); font-size: 20px; font-weight: 700; }
+.unit { fill: var(--text-muted); font-size: 10px; }
+
+.badge {
+  color: #fff;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.updated { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
