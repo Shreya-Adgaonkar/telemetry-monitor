@@ -1,13 +1,42 @@
-@if (telemetry.loading()) {
-  <p>Loading...</p>
+<header class="topbar">
+  <h1>Telemetry Monitor</h1>
+
+  <div class="status">
+    <span
+      class="conn"
+      [class.ok]="telemetry.connected()"
+      [class.bad]="!telemetry.connected() && !telemetry.loading()"
+    >
+      {{ connectionText() }}
+    </span>
+    <span class="last">Last successful update: {{ lastSuccessText() }}</span>
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="exportCsv()" [disabled]="telemetry.sessionCount() === 0">
+      Export CSV
+    </button>
+    <button type="button" (click)="exportExcel()" [disabled]="telemetry.sessionCount() === 0">
+      Export Excel
+    </button>
+    <button type="button" (click)="themeService.toggle()">
+      {{ themeService.theme() === 'dark' ? 'Light theme' : 'Dark theme' }}
+    </button>
+  </div>
+</header>
+
+@if (telemetry.error(); as err) {
+  <div class="banner" role="alert">{{ err }}</div>
 }
 
-@if (telemetry.error()) {
-  <p>{{ telemetry.error() }}</p>
-}
-
-@if (telemetry.data(); as d) {
-  <p>Velocity: {{ d.velocity.value }} {{ d.velocity.unit }}</p>
-}
-
-<app-gauge-card parameter="velocity" />
+<main class="grid">
+  @if (telemetry.loading()) {
+    @for (k of keys; track k) {
+      <div class="skeleton" aria-busy="true"></div>
+    }
+  } @else {
+    @for (k of keys; track k) {
+      <app-gauge-card [parameter]="k" />
+    }
+  }
+</main>
