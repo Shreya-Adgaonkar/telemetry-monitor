@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "frontend": "npm start --prefix frontend -- --host 127.0.0.1",
-    "electron": "wait-on tcp:127.0.0.1:4200 && electron .",
-    "dev": "concurrently \"npm:frontend\" \"npm:electron\"",
+    "electron": "wait-on tcp:127.0.0.1:4200 tcp:127.0.0.1:3000",
+    "dev":  "concurrently \"npm:backend\" \"npm:frontend\" \"npm:electron\"",
      "backend": "tsx watch backend/src/server.ts",
     "backend:build": "tsc -p backend/tsconfig.json"
   },

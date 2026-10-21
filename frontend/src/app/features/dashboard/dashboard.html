@@ -1,0 +1,11 @@
+@if (telemetry.loading()) {
+  <p>Loading...</p>
+}
+
+@if (telemetry.error()) {
+  <p>{{ telemetry.error() }}</p>
+}
+
+@if (telemetry.data(); as d) {
+  <p>Velocity: {{ d.velocity.value }} {{ d.velocity.unit }}</p>
+}
