@@ -1,0 +1,8 @@
+<div class="toolbar">
+  <button type="button" (click)="zoomIn()">Zoom In</button>
+  <button type="button" (click)="zoomOut()">Zoom Out</button>
+  <button type="button" (click)="resetZoom()">Reset</button>
+</div>
+<div class="canvas-wrap">
+  <canvas baseChart [data]="chartData" [options]="chartOptions" type="line"></canvas>
+</div>

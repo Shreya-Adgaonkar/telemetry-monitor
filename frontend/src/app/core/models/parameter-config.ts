@@ -1,37 +1,60 @@
-import { ParameterKey } from './types';
+import { ParameterKey } from './telemetry.model';
 
-export const PARAMETER_CONFIG = {
+export type Status = 'Normal' | 'Warning' | 'Critical';
+
+export interface Range {
+  min: number;
+  max: number;
+}
+
+export interface ParameterConfig {
+  label: string;
+  baseUnit: string;
+  units: string[];
+  gaugeMin: number; // base units
+  gaugeMax: number; // base units
+  normal: Range; // base units
+  warning: Range; // base units (outer range; outside it = Critical)
+  decimals: Record<string, number>; // display decimals per unit
+}
+
+export const PARAMETER_CONFIG: Record<ParameterKey, ParameterConfig> = {
   velocity: {
-    label: 'Velocity', baseUnit: 'cm/s',
+    label: 'Velocity',
+    baseUnit: 'cm/s',
     units: ['mm/s', 'cm/s', 'm/s', 'km/h', 'ft/s'],
-    min: 0, max: 300, normal: [150, 220], warning: [120, 250],
+    gaugeMin: 0,
+    gaugeMax: 300,
+    normal: { min: 150, max: 220 },
+    warning: { min: 120, max: 250 },
+    decimals: { 'mm/s': 0, 'cm/s': 1, 'm/s': 2, 'km/h': 2, 'ft/s': 2 },
   },
   pressure: {
-    label: 'Pressure', baseUnit: 'mbar',
+    label: 'Pressure',
+    baseUnit: 'mbar',
     units: ['Pa', 'kPa', 'mbar', 'bar', 'psi', 'atm'],
-    min: 800, max: 1200, normal: [980, 1040], warning: [950, 1070],
+    gaugeMin: 800,
+    gaugeMax: 1200,
+    normal: { min: 980, max: 1040 },
+    warning: { min: 950, max: 1070 },
+    decimals: { Pa: 0, kPa: 2, mbar: 1, bar: 4, psi: 2, atm: 4 },
   },
   temperature: {
-    label: 'Temperature', baseUnit: '°C',
+    label: 'Temperature',
+    baseUnit: '°C',
     units: ['°C', '°F', 'K'],
-    min: 0, max: 80, normal: [35, 39], warning: [33, 41],
+    gaugeMin: 0,
+    gaugeMax: 80,
+    normal: { min: 35, max: 39 },
+    warning: { min: 33, max: 41 },
+    decimals: { '°C': 1, '°F': 1, K: 1 },
   },
-} satisfies Record<ParameterKey, {
-  label: string; baseUnit: string; units: string[];
-  min: number; max: number; normal: number[]; warning: number[];
-}>;
-
-export const UNIT_DECIMALS: Record<string, number> = {
-  'Pa': 0, 'kPa': 2, 'mbar': 1, 'bar': 4, 'psi': 2, 'atm': 4,
-  'mm/s': 0, 'cm/s': 1, 'm/s': 2, 'km/h': 2, 'ft/s': 2,
-  '°C': 1, '°F': 1, 'K': 1,
 };
 
-export type Status = 'normal' | 'warning' | 'critical';
-
-export function getStatus(key: ParameterKey, v: number): Status {
-  const { normal, warning } = PARAMETER_CONFIG[key];
-  if (v >= normal[0] && v <= normal[1]) return 'normal';
-  if (v >= warning[0] && v <= warning[1]) return 'warning';
-  return 'critical';
+/** Status is always evaluated on the raw base-unit value, so changing units never changes it. */
+export function getStatus(key: ParameterKey, rawValue: number): Status {
+  const c = PARAMETER_CONFIG[key];
+  if (rawValue >= c.normal.min && rawValue <= c.normal.max) return 'Normal';
+  if (rawValue >= c.warning.min && rawValue <= c.warning.max) return 'Warning';
+  return 'Critical';
 }

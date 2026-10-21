@@ -1,35 +1,127 @@
+:host {
+  display: block;
+}
+
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px;
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+.unit-select {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.gauge {
+  width: 180px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  svg {
+    width: 100%;
+    display: block;
+  }
+}
+
+.track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 10;
+}
+
+.arc {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 314.1593; // 2 * PI * 50
+  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+
+  &.normal {
+    stroke: var(--normal);
+  }
+  &.warning {
+    stroke: var(--warning);
+  }
+  &.critical {
+    stroke: var(--critical);
+  }
+}
+
+.g-value {
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.g-unit {
+  font-size: 9px;
+  fill: var(--text-muted);
+}
+
+.range {
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
 }
-
-h2 { margin: 0; font-size: 1.1rem; }
-.gauge { width: 100%; max-width: 220px; }
-
-circle { fill: none; stroke-width: 10; }
-.track { stroke: var(--border); }
-.arc {
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
-}
-
-text { text-anchor: middle; }
-.value { fill: var(--text); font-size: 20px; font-weight: 700; }
-.unit { fill: var(--text-muted); font-size: 10px; }
 
 .badge {
-  color: #fff;
+  --c: var(--text-muted);
+  color: var(--c);
+  border: 1px solid var(--c);
+  background: color-mix(in srgb, var(--c) 14%, transparent);
   padding: 2px 12px;
   border-radius: 999px;
-  font-size: 0.85rem;
   font-weight: 600;
-  text-transform: capitalize;
+  font-size: 0.85rem;
+
+  &::before {
+    content: '● ';
+  }
+  &.normal {
+    --c: var(--normal);
+  }
+  &.warning {
+    --c: var(--warning);
+  }
+  &.critical {
+    --c: var(--critical);
+  }
 }
 
-.updated { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+.updated {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}

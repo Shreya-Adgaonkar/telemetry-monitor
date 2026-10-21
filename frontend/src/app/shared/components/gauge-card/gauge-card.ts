@@ -1,41 +1,72 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { PARAMETER_CONFIG, getStatus } from '../../../core/models/parameter-config';
+import { ParameterKey } from '../../../core/models/telemetry.model';
 import { TelemetryService } from '../../../core/services/telemetry';
-import { ParameterKey } from '../../../core/models/types';
-import { PARAMETER_CONFIG, UNIT_DECIMALS, getStatus } from '../../../core/models/parameter-config';
-
+import { UnitConversionService } from '../../../core/services/unit-conversion';
+import { UnitSelectionService } from '../../../core/services/unit-selection';
+import { TrendChart } from '../trend-chart/trend-chart';
 @Component({
   selector: 'app-gauge-card',
+  imports: [TrendChart],
   templateUrl: './gauge-card.html',
   styleUrl: './gauge-card.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaugeCard {
-  private telemetry = inject(TelemetryService);
+  readonly parameter = input.required<ParameterKey>();
+readonly history = computed(() => this.paramData()?.history ?? []);
+  private readonly telemetry = inject(TelemetryService);
+  private readonly converter = inject(UnitConversionService);
+  private readonly selection = inject(UnitSelectionService);
 
-  parameter = input.required<ParameterKey>();
-  circumference = 2 * Math.PI * 50;
+  readonly circumference = 2 * Math.PI * 50;
 
-  config = computed(() => PARAMETER_CONFIG[this.parameter()]);
-  rawValue = computed(() => this.telemetry.data()?.[this.parameter()].value ?? null);
+  readonly config = computed(() => PARAMETER_CONFIG[this.parameter()]);
+  readonly selectedUnit = computed(() => this.selection.units[this.parameter()]());
+  private readonly paramData = computed(() => this.telemetry.data()?.[this.parameter()] ?? null);
 
-  percent = computed(() => {
-    const v = this.rawValue();
-    if (v === null) return 0;
-    const { min, max } = this.config();
-    return Math.min(1, Math.max(0, (v - min) / (max - min)));
+  readonly rawValue = computed(() => this.paramData()?.value ?? null);
+
+  readonly displayValue = computed(() => {
+    const raw = this.rawValue();
+    if (raw === null) return '--';
+    const key = this.parameter();
+    const unit = this.selectedUnit();
+    return this.converter.format(key, this.converter.convert(key, raw, unit), unit);
   });
 
-  status = computed(() => {
-    const v = this.rawValue();
-    return v === null ? null : getStatus(this.parameter(), v);
+  readonly rangeLabel = computed(() => {
+    const key = this.parameter();
+    const unit = this.selectedUnit();
+    const c = this.config();
+    const min = this.converter.format(key, this.converter.convert(key, c.gaugeMin, unit), unit);
+    const max = this.converter.format(key, this.converter.convert(key, c.gaugeMax, unit), unit);
+    return `${min} – ${max} ${unit}`;
   });
 
-  displayValue = computed(() => {
-    const v = this.rawValue();
-    return v === null ? '--' : v.toFixed(UNIT_DECIMALS[this.config().baseUnit]);
+  // Percent and status use RAW base values, so the arc and status never jump when units change
+  readonly percent = computed(() => {
+    const raw = this.rawValue();
+    if (raw === null) return 0;
+    const c = this.config();
+    const p = (raw - c.gaugeMin) / (c.gaugeMax - c.gaugeMin);
+    return Math.min(1, Math.max(0, p));
   });
 
-  lastUpdated = computed(() => {
-    const ts = this.telemetry.data()?.timestamp;
-    return ts ? new Date(ts).toLocaleTimeString() : '--:--:--';
+  readonly dashOffset = computed(() => this.circumference * (1 - this.percent()));
+
+  readonly status = computed(() => {
+    const raw = this.rawValue();
+    return raw === null ? null : getStatus(this.parameter(), raw);
   });
+
+  readonly lastUpdated = computed(() => {
+    const d = this.telemetry.data();
+    return d ? new Date(d.timestamp).toLocaleTimeString() : '--';
+  });
+
+  onUnitChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.selection.units[this.parameter()].set(value);
+  }
 }
