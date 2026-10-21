@@ -87,16 +87,17 @@ export class TrendChart {
     },
   };
 
-  constructor() {
+    constructor() {
     afterNextRender(() => this.viewReady.set(true));
 
     // Data / unit changes: mutate in place, then update without animation
     effect(() => {
       const key = this.parameter();
-      const unit = this.unit();
+      const unit = this.unit(); // Ensure this is read actively
       const history = this.history().slice(-MAX_SAMPLES);
       const title = `${PARAMETER_CONFIG[key].label} (${unit})`;
 
+      // 1. Mutate chart data arrays in place
       this.chartData.labels = history.map((p) => p.time);
       this.chartData.datasets[0].data = history.map((p) =>
         this.converter.convert(key, p.value, unit),
@@ -105,10 +106,20 @@ export class TrendChart {
 
       const chart = this.liveChart();
       if (chart) {
-        const y = chart.options.scales?.['y'];
-        if (y) y.title = { ...y.title, display: true, text: title };
+        // 2. Explicitly force scales to accept the new structural title references
+        if (chart.options.scales?.['y']) {
+          chart.options.scales['y'].title = {
+            display: true,
+            text: title
+          };
+        }
+        
+        // 3. Re-link internal references to ensure redraw
+        chart.data.labels = this.chartData.labels;
+        chart.data.datasets[0].data = this.chartData.datasets[0].data;
+
         this.applyTheme(chart);
-        chart.update('none');
+        chart.update('none'); // Update without flickering animations
       }
     });
 
@@ -122,6 +133,7 @@ export class TrendChart {
       }
     });
   }
+
 
   zoomIn(): void {
     this.liveChart()?.zoom(1.2);

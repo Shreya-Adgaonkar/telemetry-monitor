@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { UnitSelection } from './unit-selection';
+import { UnitSelectionService } from './unit-selection';
 
 describe('UnitSelection', () => {
-  let service: UnitSelection;
+  let service: UnitSelectionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UnitSelection);
+    service = TestBed.inject(UnitSelectionService);
   });
 
   it('should be created', () => {

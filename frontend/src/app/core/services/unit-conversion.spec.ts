@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { UnitConversion } from './unit-conversion';
+import { UnitConversionService } from './unit-conversion';
 
 describe('UnitConversion', () => {
-  let service: UnitConversion;
+  let service: UnitConversionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UnitConversion);
+    service = TestBed.inject(UnitConversionService);
   });
 
   it('should be created', () => {
