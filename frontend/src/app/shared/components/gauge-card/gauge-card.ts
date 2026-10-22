@@ -5,6 +5,7 @@ import { TelemetryService } from '../../../core/services/telemetry';
 import { UnitConversionService } from '../../../core/services/unit-conversion';
 import { UnitSelectionService } from '../../../core/services/unit-selection';
 import { TrendChart } from '../trend-chart/trend-chart';
+
 @Component({
   selector: 'app-gauge-card',
   imports: [TrendChart],
@@ -14,11 +15,12 @@ import { TrendChart } from '../trend-chart/trend-chart';
 })
 export class GaugeCard {
   readonly parameter = input.required<ParameterKey>();
-  private readonly paramData = computed(() => this.telemetry.data()?.[this.parameter()] ?? null);
-  readonly history = computed(() => this.paramData()?.history ?? []);
-  private readonly telemetry = inject(TelemetryService);
+    private readonly telemetry = inject(TelemetryService);
   private readonly converter = inject(UnitConversionService);
   private readonly selection = inject(UnitSelectionService);
+  private readonly paramData = computed(() => this.telemetry.data()?.[this.parameter()] ?? null);
+  readonly history = computed(() => this.paramData()?.history ?? []);
+
 
   readonly circumference = 2 * Math.PI * 50;
 

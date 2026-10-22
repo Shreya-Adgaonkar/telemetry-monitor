@@ -2,7 +2,6 @@ const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
 
 function createWindow() {
-  // 1. Create the window instance (named 'win')
   const win = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -14,7 +13,6 @@ function createWindow() {
     }
   })
 
-  // 2. Move the conditional logic INSIDE this function and use 'win'
   if (!app.isPackaged) {
     // Load the local development server
     win.loadURL('http://127.0.0.1:4200');
