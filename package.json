@@ -1,18 +1,18 @@
 {
   "name": "telemetry-monitor",
   "version": "1.0.0",
-  "description": "",
+  "description": "Real-time telemetry monitoring desktop app (Angular + Electron)",
   "main": "electron/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm test --prefix frontend -- --watch=false",
     "frontend": "npm start --prefix frontend -- --host 127.0.0.1",
-    "electron": "wait-on tcp:127.0.0.1:4200 tcp:127.0.0.1:3000",
+    "electron": "wait-on tcp:127.0.0.1:4200 tcp:127.0.0.1:3000 && electron .",
     "dev": "concurrently \"npm:backend\" \"npm:frontend\" \"npm:electron\"",
     "backend": "tsx watch backend/src/server.ts",
     "backend:build": "tsc -p backend/tsconfig.json"
   },
   "keywords": [],
-  "author": "",
+  "author": "Shreya Adgaonkar",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
