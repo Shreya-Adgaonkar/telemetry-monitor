@@ -16,7 +16,7 @@ describe('GaugeCard', () => {
 
     // FIX: Set required inputs before the first change detection run!
     fixture.componentRef.setInput('parameter', 'velocity'); // Use a valid ParameterKey string from your config
-    
+
     fixture.detectChanges();
   });
 

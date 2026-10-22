@@ -7,7 +7,7 @@ describe('TrendChart', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TrendChart]
+      imports: [TrendChart],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TrendChart);

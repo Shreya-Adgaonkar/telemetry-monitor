@@ -1,9 +1,13 @@
 <section class="card">
   <header class="card-header">
     <h2>{{ config().label }}</h2>
-    <select class="unit-select" [attr.aria-label]="config().label + ' unit'" (change)="onUnitChange($event)">
+    <select
+      class="unit-select"
+      [attr.aria-label]="config().label + ' unit'"
+      (change)="onUnitChange($event)"
+    >
       @for (u of config().units; track u) {
-      <option [value]="u" [selected]="u === selectedUnit()">{{ u }}</option>
+        <option [value]="u" [selected]="u === selectedUnit()">{{ u }}</option>
       }
     </select>
   </header>
@@ -11,9 +15,17 @@
   <div class="gauge">
     <svg viewBox="0 0 120 120" role="img" [attr.aria-label]="config().label + ' gauge'">
       <circle class="track" cx="60" cy="60" r="50" />
-      <circle class="arc" cx="60" cy="60" r="50" transform="rotate(-90 60 60)" [class.normal]="status() === 'Normal'"
-        [class.warning]="status() === 'Warning'" [class.critical]="status() === 'Critical'"
-        [style.stroke-dashoffset.px]="dashOffset()" />
+      <circle
+        class="arc"
+        cx="60"
+        cy="60"
+        r="50"
+        transform="rotate(-90 60 60)"
+        [class.normal]="status() === 'Normal'"
+        [class.warning]="status() === 'Warning'"
+        [class.critical]="status() === 'Critical'"
+        [style.stroke-dashoffset.px]="dashOffset()"
+      />
       <text class="g-value" x="60" y="62" text-anchor="middle">{{ displayValue() }}</text>
       <text class="g-unit" x="60" y="80" text-anchor="middle">{{ selectedUnit() }}</text>
     </svg>
@@ -22,14 +34,17 @@
 
   <div class="meta">
     @if (status(); as s) {
-    <span class="badge" [class.normal]="s === 'Normal'" [class.warning]="s === 'Warning'"
-      [class.critical]="s === 'Critical'">
-      {{ s }}
-    </span>
+      <span
+        class="badge"
+        [class.normal]="s === 'Normal'"
+        [class.warning]="s === 'Warning'"
+        [class.critical]="s === 'Critical'"
+      >
+        {{ s }}
+      </span>
     }
     <span class="updated">Last updated: {{ lastUpdated() }}</span>
-  </div>  
-
+  </div>
 
   <app-trend-chart [parameter]="parameter()" [history]="history()" [unit]="selectedUnit()" />
 </section>

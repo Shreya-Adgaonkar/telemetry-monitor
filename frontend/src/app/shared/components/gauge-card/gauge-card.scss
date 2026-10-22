@@ -58,7 +58,9 @@
   stroke-width: 10;
   stroke-linecap: round;
   stroke-dasharray: 314.1593; // 2 * PI * 50
-  transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease;
+  transition:
+    stroke-dashoffset 0.8s ease,
+    stroke 0.3s ease;
 
   &.normal {
     stroke: var(--normal);

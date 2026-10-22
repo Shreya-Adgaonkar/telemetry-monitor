@@ -2,7 +2,7 @@ import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, exhaustMap, of, timer } from 'rxjs';
-import { environment } from '../../../enviornments/enviornment';
+import { environment } from '../../../environments/environment';
 import { DashboardResponse, SessionRow } from '../models/telemetry.model';
 
 const MAX_SESSION_ROWS = 10000;

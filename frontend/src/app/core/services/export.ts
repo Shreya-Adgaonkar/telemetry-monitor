@@ -4,7 +4,6 @@ import { TelemetryService } from './telemetry';
 import { UnitConversionService } from './unit-conversion';
 import { UnitSelectionService } from './unit-selection';
 
-
 interface Table {
   headers: string[];
   rows: (string | number)[][];

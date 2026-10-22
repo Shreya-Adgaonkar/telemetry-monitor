@@ -1,7 +1,7 @@
 const { app, BrowserWindow } = require('electron/main')
 const path = require('node:path')
 
-function createWindow () {
+function createWindow() {
   // 1. Create the window instance (named 'win')
   const win = new BrowserWindow({
     width: 1280,
@@ -9,7 +9,6 @@ function createWindow () {
     minWidth: 900,
     minHeight: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false
     }
@@ -22,11 +21,11 @@ function createWindow () {
 
     // Automatically open DevTools
     win.webContents.openDevTools();
-  } 
+  }
   else {
     // Construct the absolute path to your compiled index.html
     const indexPath = path.join(__dirname, '..', 'frontend', 'dist', 'frontend', 'browser', 'index.html');
-    
+
     win.loadFile(indexPath);
   }
 }

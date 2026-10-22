@@ -22,7 +22,7 @@ const MAX_SAMPLES = 100;
 
 @Component({
   selector: 'app-trend-chart',
-   standalone: true,
+  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './trend-chart.html',
   styleUrl: './trend-chart.scss',
@@ -87,7 +87,7 @@ export class TrendChart {
     },
   };
 
-    constructor() {
+  constructor() {
     afterNextRender(() => this.viewReady.set(true));
 
     // Data / unit changes: mutate in place, then update without animation
@@ -110,10 +110,10 @@ export class TrendChart {
         if (chart.options.scales?.['y']) {
           chart.options.scales['y'].title = {
             display: true,
-            text: title
+            text: title,
           };
         }
-        
+
         // 3. Re-link internal references to ensure redraw
         chart.data.labels = this.chartData.labels;
         chart.data.datasets[0].data = this.chartData.datasets[0].data;
@@ -133,7 +133,6 @@ export class TrendChart {
       }
     });
   }
-
 
   zoomIn(): void {
     this.liveChart()?.zoom(1.2);

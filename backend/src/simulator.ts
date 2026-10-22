@@ -39,7 +39,7 @@ export class TelemetrySimulator {
     const isDrift = position >= 1 && position <= 5;
 
     const keys = Object.keys(this.configs) as Array<keyof typeof this.configs>;
-    
+
     // Generate the exact ISO-based UTC HH:mm:ss format
     const now = new Date();
     const timeStr = now.toISOString().substring(11, 19);

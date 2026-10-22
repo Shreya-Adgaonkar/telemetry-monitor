@@ -14,7 +14,8 @@ import { TrendChart } from '../trend-chart/trend-chart';
 })
 export class GaugeCard {
   readonly parameter = input.required<ParameterKey>();
-readonly history = computed(() => this.paramData()?.history ?? []);
+  private readonly paramData = computed(() => this.telemetry.data()?.[this.parameter()] ?? null);
+  readonly history = computed(() => this.paramData()?.history ?? []);
   private readonly telemetry = inject(TelemetryService);
   private readonly converter = inject(UnitConversionService);
   private readonly selection = inject(UnitSelectionService);
@@ -23,29 +24,15 @@ readonly history = computed(() => this.paramData()?.history ?? []);
 
   readonly config = computed(() => PARAMETER_CONFIG[this.parameter()]);
   readonly selectedUnit = computed(() => this.selection.units[this.parameter()]());
-  private readonly paramData = computed(() => this.telemetry.data()?.[this.parameter()] ?? null);
 
   readonly rawValue = computed(() => this.paramData()?.value ?? null);
   readonly displayValue = computed(() => {
     const raw = this.rawValue();
     if (raw === null) return '--';
-    
     const key = this.parameter();
-    const unit = this.selectedUnit(); // Establishes active dependency hook
-    
-    const converted = this.converter.convert(key, raw, unit);
-    const formatted = this.converter.format(key, converted, unit);
-    
-    // Explicitly target temperature to prevent string equality lockouts
-    if (key === 'temperature') {
-      // Append an alternating invisible zero-width space configuration 
-      // based on the unit string to force Angular to redraw the template
-      return unit.includes('F') || unit.includes('f') ? `${formatted}\u200B` : formatted;
-    }
-    
-    return formatted;
+    const unit = this.selectedUnit();
+    return this.converter.format(key, this.converter.convert(key, raw, unit), unit);
   });
-
 
   readonly rangeLabel = computed(() => {
     const key = this.parameter();

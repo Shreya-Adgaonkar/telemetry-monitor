@@ -5,7 +5,6 @@ import { TelemetryService } from '../../core/services/telemetry';
 import { ExportService } from '../../core/services/export';
 import { ThemeService } from '../../core/services/theme';
 
-
 @Component({
   selector: 'app-dashboard',
   imports: [GaugeCard],
